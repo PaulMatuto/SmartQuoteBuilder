@@ -3,6 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using SmartQuoteBuilder.Data;
 using SmartQuoteBuilder.Repositories;
 using SmartQuoteBuilder.Repositories.Interfaces;
+using SmartQuoteBuilder.Services;
+using SmartQuoteBuilder.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,8 +13,16 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
-//Product Repository
+// Product Repository
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
+// Product Option Repository
+builder.Services.AddScoped<IProductOptionRepository, ProductOptionRepository>();
+// Price Calculator Service
+builder.Services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
+// Quote Repository
+builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
+// Quote Builder Service
+builder.Services.AddScoped<IQuoteBuilderService, QuoteBuilderService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

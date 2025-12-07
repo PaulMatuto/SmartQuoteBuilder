@@ -11,5 +11,6 @@ namespace SmartQuoteBuilder.Data
     {
         public DbSet<Product> Products { get; set; }
         public DbSet<ProductOption> ProductOptions { get; set; }
+        public DbSet<Quote> Quotes { get; set; }
     }
 }

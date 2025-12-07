@@ -16,6 +16,7 @@ namespace SmartQuoteBuilder.Controllers
             _productRepository = productRepository;
         }
 
+        // GET: api/products
         [HttpGet]
         public async Task<IActionResult> GetAllProducts()
         {
