@@ -1,4 +1,6 @@
-﻿using SmartQuoteBuilder.Models;
+﻿using Microsoft.EntityFrameworkCore;
+using SmartQuoteBuilder.Data;
+using SmartQuoteBuilder.Models;
 using SmartQuoteBuilder.Repositories.Interfaces;
 using SmartQuoteBuilder.Services.Interfaces;
 
@@ -9,11 +11,14 @@ namespace SmartQuoteBuilder.Services
         private readonly IPriceCalculatorService _priceCalculator;
         private readonly IQuoteRepository _quoteRepository;
         private readonly IQuoteValidationService _quoteValidationService;
-        public QuoteBuilderService(IPriceCalculatorService priceCalculator, IQuoteRepository quoteRepository,IQuoteValidationService quoteValidationService)
+        private readonly ApplicationDbContext _db;
+        public QuoteBuilderService(IPriceCalculatorService priceCalculator, IQuoteRepository quoteRepository,
+            IQuoteValidationService quoteValidationService, ApplicationDbContext db)
         {
             _priceCalculator = priceCalculator;
             _quoteRepository = quoteRepository;
             _quoteValidationService = quoteValidationService;
+            _db = db;
         }
         public async Task<Quote> BuildQuoteAsync(int productId, List<int> optionIds)
         {
@@ -34,6 +39,30 @@ namespace SmartQuoteBuilder.Services
 
             // Return completed quote
             return createdQuote;
+        }
+
+        public async Task<QuoteSummaryResponse> GetQuoteSummaryAsync(int quoteId)
+        {
+            var quote = await _quoteRepository.GetQuoteByIdAsync(quoteId);
+            if (quote == null)
+                throw new Exception($"Quote with ID {quoteId} does not exist.");
+
+            // Load product
+            var product = await _db.Products.FirstOrDefaultAsync(p => p.ProductId == quote.ProductId);
+
+            // Parse options
+            var optionIds = quote.SelectedOptionIds.Split(',').Select(int.Parse).ToList();
+
+            var options = await _db.ProductOptions.Where(o => optionIds.Contains(o.OptionId)).ToListAsync();
+
+            return new QuoteSummaryResponse
+            {
+                QuoteId = quote.QuoteId,
+                ProductName = product!.Name,
+                SelectedOptionNames = options.Select(o => o.Name).ToList(),
+                TotalPrice = quote.TotalPrice,
+                CreatedAt = quote.CreatedAt
+            };
         }
     }
 }

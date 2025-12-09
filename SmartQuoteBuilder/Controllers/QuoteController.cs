@@ -26,5 +26,12 @@ namespace SmartQuoteBuilder.Controllers
 
             return Ok(quote);
         }
+
+        [HttpGet("{id}")]
+        public async Task<IActionResult> GetQuoteSummary(int id)
+        {
+            var summary = await _quoteBuilderService.GetQuoteSummaryAsync(id);
+            return Ok(summary);
+        }
     }
 }
