@@ -23,6 +23,8 @@ builder.Services.AddScoped<IPriceCalculatorService, PriceCalculatorService>();
 builder.Services.AddScoped<IQuoteRepository, QuoteRepository>();
 // Quote Builder Service
 builder.Services.AddScoped<IQuoteBuilderService, QuoteBuilderService>();
+// Quote Validation Service
+builder.Services.AddScoped<IQuoteValidationService, QuoteValidationService>();
 
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 

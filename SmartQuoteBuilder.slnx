@@ -1,3 +1,4 @@
 <Solution>
+  <Project Path="SmartQuoteBuilder.Tests/SmartQuoteBuilder.Tests.csproj" Id="ad0662c9-85f2-477b-bb9e-4dbe4bfef962" />
   <Project Path="SmartQuoteBuilder/SmartQuoteBuilder.csproj" />
 </Solution>
