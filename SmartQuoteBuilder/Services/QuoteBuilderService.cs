@@ -3,6 +3,7 @@ using SmartQuoteBuilder.Data;
 using SmartQuoteBuilder.Models;
 using SmartQuoteBuilder.Repositories.Interfaces;
 using SmartQuoteBuilder.Services.Interfaces;
+using Serilog;
 
 namespace SmartQuoteBuilder.Services
 {
@@ -22,11 +23,16 @@ namespace SmartQuoteBuilder.Services
         }
         public async Task<Quote> BuildQuoteAsync(int productId, List<int> optionIds)
         {
+            Log.Information("Starting quote build for Product ID: {productId} Options: {optionIds}",
+                            productId, string.Join(",", optionIds));
+
             // Quote request validation
             await _quoteValidationService.ValidateQuoteRequestAsync(productId, optionIds);
+            Log.Information("Validation successful for ProductId={ProductId}", productId);
 
             // Calculate final price using pricing service
             decimal totalPrice = await _priceCalculator.CalculateTotalPriceAsync(productId, optionIds);
+            Log.Information("Price calculated: {TotalPrice}", totalPrice);
 
             // Convert option list to CSV for storage
             string optionString = string.Join(",", optionIds);
@@ -36,6 +42,7 @@ namespace SmartQuoteBuilder.Services
 
             // Save the quote in Database
             var createdQuote = await _quoteRepository.CreateQuoteAsync(newQuote);
+            Log.Information("Quote created with QuoteId={QuoteId}", createdQuote.QuoteId);
 
             // Return completed quote
             return createdQuote;

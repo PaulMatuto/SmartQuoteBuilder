@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Serilog;
 using SmartQuoteBuilder.Data;
 using SmartQuoteBuilder.Services.Interfaces;
 
@@ -16,7 +17,10 @@ namespace SmartQuoteBuilder.Services
             // Product must exist
             var productExists = await _db.Products.AnyAsync(p => p.ProductId == productId);
             if (!productExists)
+            { 
+                Log.Warning("Validation failed: Product {ProductId} does not exist", productId);
                 throw new Exception($"Product with ID {productId} does not exist");
+            }
 
             // At least 1 option must be selected
             if (optionIds == null || optionIds.Count == 0)
@@ -33,7 +37,10 @@ namespace SmartQuoteBuilder.Services
 
             bool productHasWrongOption = options.Any(o => o.ProductId != productId);
             if (productHasWrongOption)
+            {
+                Log.Warning("Validation failed: Option {OptionId} is not valid for Product {ProductId}", optionIds, productId);
                 throw new Exception("Some selected options do not belong to the product.");
+            }
         }
     }
 }
