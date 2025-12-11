@@ -1,0 +1,22 @@
+﻿@page
+@model QuoteSummaryPageModel
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<h2>Quote Summary</h2>
+
+<p><strong>Product:</strong> @Model.Summary.ProductName</p>
+
+<h4>Options</h4>
+
+<ul>
+    @foreach (var selectedOption in Model.Summary.SelectedOptionNames)
+    {
+        <li>@selectedOption</li>
+    }
+</ul>
+
+<h4>Total Price: @Model.Summary.TotalPrice</h4>
+
+<p><small>Created: @Model.Summary.CreatedAt</small></p>

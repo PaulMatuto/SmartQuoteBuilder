@@ -25,6 +25,9 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(connectionString));
 
+// Razor for Frontend
+builder.Services.AddRazorPages();
+
 // Product Repository
 builder.Services.AddScoped<IProductRepository, ProductRepository>();
 // Product Option Repository
@@ -42,13 +45,14 @@ builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true)
     .AddEntityFrameworkStores<ApplicationDbContext>();
-builder.Services.AddControllersWithViews();
+//builder.Services.AddControllersWithViews();
 
 // Initialize Swagger - for API Documentation
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+builder.Services.AddHttpClient("api", client => { client.BaseAddress = new Uri("http://localhost:58223"); });
 
 var app = builder.Build();
 
@@ -69,6 +73,8 @@ else
 
 app.UseHttpsRedirection();
 app.UseRouting();
+
+app.MapRazorPages();
 
 app.UseAuthorization();
 

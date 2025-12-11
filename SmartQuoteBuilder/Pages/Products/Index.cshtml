@@ -1,0 +1,29 @@
+﻿@page
+@model ProductsIndexModel
+@{
+    Layout = "../Shared/_Layout.cshtml";
+}
+
+<h2>Products</h2>
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Description</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var p in Model.Products)
+        {
+            <tr>
+                <td>@p.Name</td>
+                <td>@p.Description</td>
+                <td>
+                    <a class="btn btn-primary" href="/Quotes/Create?productId=@p.ProductId">Create Quote</a>
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
